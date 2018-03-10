@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">StockQuotes</string>
+    <string name="stock_prompt">Please Enter in Stock Symbol</string>
+    <string name="sym">Symbol:</string>
+    <string name="name">Name:</string>
+    <string name="last_price">Last Trade Price:</string>
+    <string name="last_time">Last Trade Time:</string>
+    <string name="change">Change:</string>
+    <string name="range">52 Week Range:</string>
+    <string name="space">"                                      "</string>
+
+
+
+</resources>
