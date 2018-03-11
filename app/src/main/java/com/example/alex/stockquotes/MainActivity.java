@@ -16,6 +16,37 @@ public class MainActivity extends AppCompatActivity {
     private TextView symcont, namecont, lastpricecont ,lasttimecont, changecont, rangecont;
     private EditText prompt;
 
+    @Override
+    public void onSaveInstanceState(Bundle b) {
+        super.onSaveInstanceState(b);
+        b.putString("symString", sym);
+        b.putString("nameString", name);
+        b.putString("priceString", lastprice);
+        b.putString("timeString", lasttime);
+        b.putString("changeString", change);
+        b.putString("rangeString", range);
+        b.putString("inputString", prompt.getText().toString());
+    }
+
+    public void onRestoreInstanceState(Bundle b){
+        if(b != null){
+            super.onRestoreInstanceState(b);
+
+            symcont.setText(b.getString("symString"));
+            namecont.setText(b.getString("nameString"));
+            lastpricecont.setText(b.getString("priceString"));
+            lasttimecont.setText(b.getString("timeString"));
+            changecont.setText(b.getString("changeString"));
+            rangecont.setText(b.getString("rangeString"));
+            prompt.setText(b.getString("inputString"));
+            sym = b.getString("symString");
+            name =b.getString("nameString");
+            lastprice = b.getString("priceString");
+            lasttime = b.getString("timeString");
+            change = b.getString("changeString");
+            range =b.getString("rangeString") ;
+        }
+    }
 
 
     @Override
@@ -39,21 +70,26 @@ public class MainActivity extends AppCompatActivity {
         private OnKeyListener mKeyListener = new OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Stock stock = new Stock("null");
 
                 getStockJson gsj = new getStockJson();
                 gsj.execute(prompt.getText().toString());
                 try {
-                    gsj.get();
+                    stock = gsj.get();
+                    if(stock == null || stock.getSymbol() == "null"){
+                        Toast.makeText(getApplicationContext(), "Error gathering data", Toast.LENGTH_SHORT).show();
+                        return false;
+                    }else {
+                        symcont.setText(sym);
+                        namecont.setText(name);
+                        lastpricecont.setText(lastprice);
+                        lasttimecont.setText(lasttime);
+                        changecont.setText(change);
+                        rangecont.setText(range);
+                    }
                 }catch (Exception e){
                     Log.i("Error", e.getMessage());
                 }
-                symcont.setText(sym);
-                namecont.setText(name);
-                lastpricecont.setText(lastprice);
-                lasttimecont.setText(lasttime);
-                changecont.setText(change);
-                rangecont.setText(range);
-
                 return false;
             }
 
@@ -72,8 +108,9 @@ public class MainActivity extends AppCompatActivity {
                 change = stock.getChange();
                 range = stock.getRange();
             }catch(Exception e){
-                Toast.makeText(getApplicationContext(), "Error gathering data", Toast.LENGTH_SHORT).show();
                 Log.i("Error", e.getMessage());
+                return null;
+
             }
             return stock;
 
